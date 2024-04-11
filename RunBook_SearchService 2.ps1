@@ -3,7 +3,7 @@ Connect-AzAccount
 Set-AzContext -SubscriptionId "1d012c12-eb7c-4bc4-aba7-d34e5c20bf00"
 
 $resourceGroupName = "EwsArmDeploy"
-$searchServiceName = "rgworkspacecognitivesearch"
+$searchServiceName = "rgworkspacecognitivesearchtest"
  
 # Get the admin API key
 $adminApiKey = Get-AzSearchAdminKeyPair -ResourceGroupName $resourceGroupName -ServiceName $searchServiceName
@@ -11,7 +11,7 @@ $adminkey = $adminApiKey.primary
 
 # Store the admin API key in Azure Key Vault
 $adminSecret = ConvertTo-SecureString -String $adminKey -AsPlainText -Force
-$secret = Set-AzKeyVaultSecret -VaultName "ews-keyvault-test" -Name "search-Service-API-Key" -SecretValue $adminSecret
+$secret = Set-AzKeyVaultSecret -VaultName "rg-workspace-keyvault" -Name "search-Service-API-Key" -SecretValue $adminSecret
 
  
 $headers = @{
