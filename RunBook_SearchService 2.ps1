@@ -3,7 +3,7 @@ Connect-AzAccount
 Set-AzContext -SubscriptionId "1d012c12-eb7c-4bc4-aba7-d34e5c20bf00"
 
 $resourceGroupName = "EwsArmDeploy"
-$searchServiceName = "rgworkspacecognitivesearch"
+$searchServiceName = "rgworkspacecognitivesearchtest"
  
 # Get the admin API key
 $adminApiKey = Get-AzSearchAdminKeyPair -ResourceGroupName $resourceGroupName -ServiceName $searchServiceName
