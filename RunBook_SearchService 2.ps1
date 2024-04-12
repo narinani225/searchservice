@@ -1,5 +1,5 @@
 
-$resourceGroupName = "EwsArmDeploy"
+$resourceGroupName = "ewstest"
 $searchServiceName = "rgworkspacecognitivesearchtest"
  
 # Get the admin API key
