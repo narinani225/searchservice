@@ -1,17 +1,22 @@
+ 
+$resourceGroupName = "EwsArmDeploy"
+$searchServiceName = "rgworkspacecognitivesearch"
+ 
 # Get the admin API key
 $adminApiKey = Get-AzSearchAdminKeyPair -ResourceGroupName $resourceGroupName -ServiceName $searchServiceName
-$adminKey = $adminApiKey.primary
+$adminkey = $adminApiKey.primary
 
 # Store the admin API key in Azure Key Vault
 $adminSecret = ConvertTo-SecureString -String $adminKey -AsPlainText -Force
-$secret = Set-AzKeyVaultSecret -VaultName "rg-workspace-keyvault" -Name "search-Service-API-Key" -SecretValue $adminSecret
+$secret = Set-AzKeyVaultSecret -VaultName "ews-keyvault-test" -Name "search-Service-API-Key" -SecretValue $adminSecret
 
+ 
 $headers = @{
-    'api-key' = $adminKey
+    'api-key' = $adminkey
     'Content-Type' = 'application/json'
     'Accept' = 'application/json'
 }
-
+ 
 # Create index request body
 $indexBody = @{
     "name" = "azure-blob-blogs-index"
@@ -126,7 +131,7 @@ $indexBody = @{
         }
     )
 } | ConvertTo-Json
-
+ 
 $openAiIndexBody = @{
     "name" = "open-ai-index"
     "fields" = @(
@@ -202,14 +207,15 @@ $openAiIndexBody = @{
         }
     )
 } | ConvertTo-Json
-
+ 
+ 
 $urlIndex = "https://$($searchServiceName).search.windows.net/indexes/azure-blob-blogs-index?api-version=2023-11-01"
 $urlIndex1 = "https://$($searchServiceName).search.windows.net/indexes/open-ai-index?api-version=2023-11-01"
-
+ 
 # Create the index
 Invoke-RestMethod -Uri $urlIndex -Headers $headers -Method Put -Body $indexBody | ConvertTo-Json
 Invoke-RestMethod -Uri $urlIndex1 -Headers $headers -Method Put -Body $openAiIndexBody | ConvertTo-Json
-
+ 
 # Create datasource request body
 $datasourceBody = @{
     "name" = "azure-blob-datasource"
@@ -221,8 +227,8 @@ $datasourceBody = @{
         "name" = "dev-container-blob"
     }
 } | ConvertTo-Json
-
+ 
 $urlDatasource = "https://$($searchServiceName).search.windows.net/datasources/azure-blob-datasource?api-version=2023-11-01"
-
+ 
 # Create the datasource
 Invoke-RestMethod -Uri $urlDatasource -Headers $headers -Method Put -Body $datasourceBody | ConvertTo-Json
