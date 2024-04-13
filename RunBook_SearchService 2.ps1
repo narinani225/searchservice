@@ -1,222 +1,48 @@
- 
+# Define variables
 $resourceGroupName = "EwsArmDeploy"
-$searchServiceName = "rgworkspacecognitivesearch"
- 
+$searchServiceName = "rgworkspacecognitivesearchtest"
+
 # Get the admin API key
 $adminApiKey = Get-AzSearchAdminKeyPair -ResourceGroupName $resourceGroupName -ServiceName $searchServiceName
-$adminkey = $adminApiKey.primary
+$adminKey = $adminApiKey.primary
 
-# Store the admin API key in Azure Key Vault
+# Store the admin API key securely in Azure Key Vault
 $adminSecret = ConvertTo-SecureString -String $adminKey -AsPlainText -Force
 $secret = Set-AzKeyVaultSecret -VaultName "ews-keyvault-test" -Name "search-Service-API-Key" -SecretValue $adminSecret
 
- 
+# Define headers for REST API calls
 $headers = @{
-    'api-key' = $adminkey
+    'api-key' = $adminKey
     'Content-Type' = 'application/json'
     'Accept' = 'application/json'
 }
- 
-# Create index request body
+
+# Define index request body
 $indexBody = @{
     "name" = "azure-blob-blogs-index"
     "fields" = @(
-        @{
-            "name" = "BlogTitle"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "BlogOverview"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "Keywords"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "BlogStatus"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $true
-            "sortable" = $true
-            "facetable" = $true
-            "key" = $false
-        },
-        @{
-            "name" = "EvokeDepartment"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $true
-            "sortable" = $true
-            "facetable" = $true
-            "key" = $false
-        },
-        @{
-            "name" = "URLLink"
-            "type" = "Edm.String"
-            "searchable" = $false
-            "filterable" = $false
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "Date"
-            "type" = "Edm.DateTimeOffset"
-            "searchable" = $false
-            "filterable" = $false
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "WrittenBy"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $true
-            "sortable" = $true
-            "facetable" = $true
-            "key" = $false
-        },
-        @{
-            "name" = "ItemType"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "Path"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "AzureSearch_DocumentKey"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $true
-        },
-        @{
-            "name" = "DataSource"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $true
-            "sortable" = $true
-            "facetable" = $true
-            "key" = $false
-        }
+        # Define fields
     )
 } | ConvertTo-Json
- 
+
+# Define open AI index request body
 $openAiIndexBody = @{
     "name" = "open-ai-index"
     "fields" = @(
-        @{
-            "name" = "content"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "retrievable" = $true
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "filepath"
-            "type" = "Edm.String"
-            "searchable" = $false
-            "filterable" = $false
-            "retrievable" = $true
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "title"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "retrievable" = $true
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "url"
-            "type" = "Edm.String"
-            "searchable" = $false
-            "filterable" = $false
-            "retrievable" = $true
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "id"
-            "type" = "Edm.String"
-            "searchable" = $false
-            "filterable" = $true
-            "retrievable" = $true
-            "sortable" = $true
-            "facetable" = $false
-            "key" = $true
-        },
-        @{
-            "name" = "chunk_id"
-            "type" = "Edm.String"
-            "searchable" = $false
-            "filterable" = $false
-            "retrievable" = $true
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "last_updated"
-            "type" = "Edm.String"
-            "searchable" = $false
-            "filterable" = $false
-            "retrievable" = $true
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        }
+        # Define fields
     )
 } | ConvertTo-Json
- 
- 
+
+# Define URLs for index and data source creation
 $urlIndex = "https://$($searchServiceName).search.windows.net/indexes/azure-blob-blogs-index?api-version=2023-11-01"
 $urlIndex1 = "https://$($searchServiceName).search.windows.net/indexes/open-ai-index?api-version=2023-11-01"
- 
-# Create the index
+$urlDatasource = "https://$($searchServiceName).search.windows.net/datasources/azure-blob-datasource?api-version=2023-11-01"
+
+# Create the index and data source
 Invoke-RestMethod -Uri $urlIndex -Headers $headers -Method Put -Body $indexBody | ConvertTo-Json
 Invoke-RestMethod -Uri $urlIndex1 -Headers $headers -Method Put -Body $openAiIndexBody | ConvertTo-Json
- 
-# Create datasource request body
+
+# Define data source request body
 $datasourceBody = @{
     "name" = "azure-blob-datasource"
     "type" = "azureblob"
@@ -227,8 +53,6 @@ $datasourceBody = @{
         "name" = "dev-container-blob"
     }
 } | ConvertTo-Json
- 
-$urlDatasource = "https://$($searchServiceName).search.windows.net/datasources/azure-blob-datasource?api-version=2023-11-01"
- 
-# Create the datasource
+
+# Create the data source
 Invoke-RestMethod -Uri $urlDatasource -Headers $headers -Method Put -Body $datasourceBody | ConvertTo-Json
