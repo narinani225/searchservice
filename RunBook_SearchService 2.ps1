@@ -21,25 +21,13 @@ $headers = @{
 $indexBody = @{
     "name" = "azure-blob-blogs-index"
     "fields" = @(
-        @{
-            "name" = "BlogTitle"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "BlogOverview"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        # Add more field definitions as needed
+        # Define fields here
+        # Example:
+        # @{
+        #     "name" = "BlogTitle"
+        #     "type" = "Edm.String"
+        #     "searchable" = $true
+        # }
     )
 } | ConvertTo-Json
 
@@ -47,27 +35,13 @@ $indexBody = @{
 $openAiIndexBody = @{
     "name" = "open-ai-index"
     "fields" = @(
-        @{
-            "name" = "content"
-            "type" = "Edm.String"
-            "searchable" = $true
-            "filterable" = $false
-            "retrievable" = $true
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        @{
-            "name" = "filepath"
-            "type" = "Edm.String"
-            "searchable" = $false
-            "filterable" = $false
-            "retrievable" = $true
-            "sortable" = $false
-            "facetable" = $false
-            "key" = $false
-        },
-        # Add more field definitions as needed
+        # Define fields here
+        # Example:
+        # @{
+        #     "name" = "content"
+        #     "type" = "Edm.String"
+        #     "searchable" = $true
+        # }
     )
 } | ConvertTo-Json
 
@@ -76,7 +50,7 @@ $urlIndex = "https://$($searchServiceName).search.windows.net/indexes/azure-blob
 $urlIndex1 = "https://$($searchServiceName).search.windows.net/indexes/open-ai-index?api-version=2023-11-01"
 $urlDatasource = "https://$($searchServiceName).search.windows.net/datasources/azure-blob-datasource?api-version=2023-11-01"
 
-# Create the index and open AI index
+# Create the index and data source
 Invoke-RestMethod -Uri $urlIndex -Headers $headers -Method Put -Body $indexBody | ConvertTo-Json
 Invoke-RestMethod -Uri $urlIndex1 -Headers $headers -Method Put -Body $openAiIndexBody | ConvertTo-Json
 
