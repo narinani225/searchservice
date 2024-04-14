@@ -21,13 +21,16 @@ $headers = @{
 $indexBody = @{
     "name" = "azure-blob-blogs-index"
     "fields" = @(
-        # Define fields here
-        # Example:
-        # @{
-        #     "name" = "BlogTitle"
-        #     "type" = "Edm.String"
-        #     "searchable" = $true
-        # }
+        @{
+            "name" = "BlogTitle"
+            "type" = "Edm.String"
+            "searchable" = $true
+        },
+        @{
+            "name" = "BlogContent"
+            "type" = "Edm.String"
+            "searchable" = $true
+        }
     )
 } | ConvertTo-Json
 
@@ -35,13 +38,11 @@ $indexBody = @{
 $openAiIndexBody = @{
     "name" = "open-ai-index"
     "fields" = @(
-        # Define fields here
-        # Example:
-        # @{
-        #     "name" = "content"
-        #     "type" = "Edm.String"
-        #     "searchable" = $true
-        # }
+        @{
+            "name" = "content"
+            "type" = "Edm.String"
+            "searchable" = $true
+        }
     )
 } | ConvertTo-Json
 
@@ -51,8 +52,13 @@ $urlIndex1 = "https://$($searchServiceName).search.windows.net/indexes/open-ai-i
 $urlDatasource = "https://$($searchServiceName).search.windows.net/datasources/azure-blob-datasource?api-version=2023-11-01"
 
 # Create the index and data source
-Invoke-RestMethod -Uri $urlIndex -Headers $headers -Method Put -Body $indexBody | ConvertTo-Json
-Invoke-RestMethod -Uri $urlIndex1 -Headers $headers -Method Put -Body $openAiIndexBody | ConvertTo-Json
+try {
+    Invoke-RestMethod -Uri $urlIndex -Headers $headers -Method Put -Body $indexBody -ErrorAction Stop | ConvertTo-Json
+    Invoke-RestMethod -Uri $urlIndex1 -Headers $headers -Method Put -Body $openAiIndexBody -ErrorAction Stop | ConvertTo-Json
+}
+catch {
+    Write-Error "Error creating index or open AI index: $_"
+}
 
 # Define data source request body
 $datasourceBody = @{
@@ -67,4 +73,9 @@ $datasourceBody = @{
 } | ConvertTo-Json
 
 # Create the data source
-Invoke-RestMethod -Uri $urlDatasource -Headers $headers -Method Put -Body $datasourceBody | ConvertTo-Json
+try {
+    Invoke-RestMethod -Uri $urlDatasource -Headers $headers -Method Put -Body $datasourceBody -ErrorAction Stop | ConvertTo-Json
+}
+catch {
+    Write-Error "Error creating data source: $_"
+}
