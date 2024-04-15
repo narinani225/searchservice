@@ -1,6 +1,6 @@
 # Connect to Azure account (ensure you're logged in)
 Connect-AzAccount
-
+<#
 # Set the name of your App Service, storage account, and file share
 $appServiceName = "rg-workspace-ui-app"
 $storageAccountName = "rgworkspacesg"
@@ -26,3 +26,4 @@ Invoke-AzCliCommand -ScriptBlock {
 Invoke-AzCliCommand -ScriptBlock {
     az webapp config storage-account list --resource-group $using:resourceGroupName --name $using:appServiceName
 }
+#>
