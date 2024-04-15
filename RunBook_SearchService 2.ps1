@@ -13,6 +13,20 @@ $appServicePlanName = "rg-workspace-serviceplan"
 # Get the storage account key
 $storageAccountKey = "a5f+AK/Q974cBVEW7uRSR6zTLgo8HvkbvMLTtHZifL42M7TglsHLjN2dUhUR4q4F7cz8wzjmxK5r+AStKwmZAA=="
 # Add the storage account as a mount
-az webapp config storage-account add --resource-group $resourceGroupName --name $appServiceName --custom-id $storageAccountName --storage-type AzureFiles --share-name $fileShareName --account-name $storageAccountName --access-key $storageAccountKey --mount-path $containerPath
+
+
+# Construct the storage account properties
+$storageAccountProperties = @{
+    "CustomId" = $storageAccountName
+    "StorageType" = "AzureFiles"
+    "ShareName" = $fileShareName
+    "AccountName" = $storageAccountName
+    "AccessKey" = $storageAccountKey
+    "MountPath" = $containerPath
+}
+
+# Add the storage account as a mount
+Add-AzWebAppStorageAccount -ResourceGroupName $resourceGroupName -Name $appServiceName -CustomId $storageAccountName -StorageType AzureFiles -ShareName $fileShareName -AccountName $storageAccountName -AccessKey $storageAccountKey -MountPath $containerPath
+
 # Verify the storage is mounted
-az webapp config storage-account list --resource-group $resourceGroupName --name $appServiceName
+Get-AzWebAppStorageAccount -ResourceGroupName $resourceGroupName -Name $appServiceName
