@@ -10,6 +10,8 @@ $appServicePlanName = (Get-AzWebApp -Name $appServiceName).ServerFarm
 # Get the storage account key
 $storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName)[0].Value
 # Add the storage account as a mount
-az webapp config storage-account add --resource-group $resourceGroupName --name $appServiceName --custom-id $storageAccountName --storage-type AzureFiles --share-name $fileShareName --account-name $storageAccountName --access-key $storageAccountKey --mount-path $containerPath
+Set-AzWebApp -Name $appServiceName -ResourceGroupName $resourceGroupName -MountEntry $storageAccountName `
+    -AccountName $storageAccountName -ShareName $fileShareName -AccessKey $storageAccountKey -Type AzureFiles `
+    -CustomId $storageAccountName -DestinationPath $containerPath
 # Verify the storage is mounted
-az webapp config storage-account list --resource-group $resourceGroupName --name $appServiceName
+Get-AzWebApp -Name $appServiceName -ResourceGroupName $resourceGroupName | Select-Object -ExpandProperty MountEntries
