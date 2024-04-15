@@ -1,81 +1,27 @@
-# Define variables
-$resourceGroupName = "EwsArmDeploy"
-$searchServiceName = "rgworkspacecognitivesearchtest"
+# Set variables
+appServiceName="rg-workspace-ui-app"
+storageAccountName="rgworkspacesg"
+fileShareName="mounttest"
+containerPath="/usr/share/nginx/html/assets"
 
-# Get the admin API key
-$adminApiKey = Get-AzSearchAdminKeyPair -ResourceGroupName $resourceGroupName -ServiceName $searchServiceName
-$adminKey = $adminApiKey.primary
+# Get resource group name
+resourceGroupName=$(az webapp show --name $appServiceName --query 'resourceGroup' -o tsv)
 
-# Store the admin API key securely in Azure Key Vault
-$adminSecret = ConvertTo-SecureString -String $adminKey -AsPlainText -Force
-$secret = Set-AzKeyVaultSecret -VaultName "ews-keyvault-test" -Name "search-Service-API-Key" -SecretValue $adminSecret
+# Get storage account key
+storageAccountKey=$(az storage account keys list --resource-group $resourceGroupName --account-name $storageAccountName --query '[0].value' -o tsv)
 
-# Define headers for REST API calls
-$headers = @{
-    'api-key' = $adminKey
-    'Content-Type' = 'application/json'
-    'Accept' = 'application/json'
-}
+# Add storage account as mount
+az webapp config storage-account add \
+    --resource-group $resourceGroupName \
+    --name $appServiceName \
+    --custom-id $storageAccountName \
+    --storage-type AzureFiles \
+    --share-name $fileShareName \
+    --account-name $storageAccountName \
+    --access-key $storageAccountKey \
+    --mount-path $containerPath
 
-# Define index request body
-$indexBody = @{
-    "name" = "azure-blob-blogs-index"
-    "fields" = @(
-        @{
-            "name" = "BlogTitle"
-            "type" = "Edm.String"
-            "searchable" = $true
-        },
-        @{
-            "name" = "BlogContent"
-            "type" = "Edm.String"
-            "searchable" = $true
-        }
-    )
-} | ConvertTo-Json
-
-# Define open AI index request body
-$openAiIndexBody = @{
-    "name" = "open-ai-index"
-    "fields" = @(
-        @{
-            "name" = "content"
-            "type" = "Edm.String"
-            "searchable" = $true
-        }
-    )
-} | ConvertTo-Json
-
-# Define URLs for index and data source creation
-$urlIndex = "https://$($searchServiceName).search.windows.net/indexes/azure-blob-blogs-index?api-version=2023-11-01"
-$urlIndex1 = "https://$($searchServiceName).search.windows.net/indexes/open-ai-index?api-version=2023-11-01"
-$urlDatasource = "https://$($searchServiceName).search.windows.net/datasources/azure-blob-datasource?api-version=2023-11-01"
-
-# Create the index and data source
-try {
-    Invoke-RestMethod -Uri $urlIndex -Headers $headers -Method Put -Body $indexBody -ErrorAction Stop | ConvertTo-Json
-    Invoke-RestMethod -Uri $urlIndex1 -Headers $headers -Method Put -Body $openAiIndexBody -ErrorAction Stop | ConvertTo-Json
-}
-catch {
-    Write-Error "Error creating index or open AI index: $_"
-}
-
-# Define data source request body
-$datasourceBody = @{
-    "name" = "azure-blob-datasource"
-    "type" = "azureblob"
-    "credentials" = @{
-        "connectionString" = "DefaultEndpointsProtocol=https;AccountName=pmoblobstorageaccount;AccountKey=9x/DEVuXorrgsrqAsawRWRWBwE/UJ8bJUJceCthRzRteC5JnRBdH+GluJ1BGFF/A29A6LGu5tQKD+ASt+MO/bg==;EndpointSuffix=core.windows.net"
-    }
-    "container" = @{
-        "name" = "dev-container-blob"
-    }
-} | ConvertTo-Json
-
-# Create the data source
-try {
-    Invoke-RestMethod -Uri $urlDatasource -Headers $headers -Method Put -Body $datasourceBody -ErrorAction Stop | ConvertTo-Json
-}
-catch {
-    Write-Error "Error creating data source: $_"
-}
+# Verify storage mount
+az webapp config storage-account list \
+    --resource-group $resourceGroupName \
+    --name $appServiceName
