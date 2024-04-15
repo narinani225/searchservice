@@ -12,4 +12,5 @@ $jsonString = $jsonObject | ConvertTo-Json
 
 # Write the JSON string to a file
 $jsonString | Out-File -FilePath "api-url.json"
-ls
+$list=ls
+write-output $list
