@@ -1,15 +1,5 @@
 # Set the name of your App Service, storage account, and file share
-$appServiceName = "rg-workspace-ui-app"
-$storageAccountName = "rgworkspacesg"
-$fileShareName = "mount"
-# Set the destination path in the container
-$containerPath = "/usr/share/nginx/html/assets"
-# Get the resource group name and the name of the App Service plan
-$resourceGroupName = (Get-AzWebApp -Name $appServiceName).ResourceGroup
-$appServicePlanName = (Get-AzWebApp -Name $appServiceName).ServerFarm
-# Get the storage account key
-$storageAccountKey = (Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName)[0].Value
-# Add the storage account as a mount
-az webapp config storage-account add --resource-group $resourceGroupName --name $appServiceName --custom-id $storageAccountName --storage-type AzureFiles --share-name $fileShareName --account-name $storageAccountName --access-key $storageAccountKey --mount-path $containerPath
-# Verify the storage is mounted
-az webapp config storage-account list --resource-group $resourceGroupName --name $appServiceName
+$i=34
+$j=36
+$k=$i=$j
+write-host $k
