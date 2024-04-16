@@ -1,17 +1,8 @@
-﻿# Define your SQL Server connection parameters
 $serverInstance = "rg-workspace-sql-server.database.windows.net"
-#$database = "rg-workspace-sql-db"
-$database = "testdb"
+$database = "rg-workspace-sql-db"
 $username = "Workspaceadmin"
 $password = "admin@2024#2103"
- 
-# Path to your SQL script file
-#$sqlScriptPath = "C:\ShivaImplementaion\JSONTempleate\EWS\sqlscript 1.sql"
- 
-# Execute the SQL script
-#Invoke-Sqlcmd -ServerInstance $serverInstance -Database $database -Username $username -Password $password -InputFile $sqlScriptPath
-
-Invoke-Sqlcmd -ServerInstance $serverInstance -Database $database -Username $username -Password $password -query "/****** Object:  Table [dbo].[Applications]    Script Date: 19-03-2024 01:47:42 ******/
+$query ="/****** Object:  Table [dbo].[Applications]    Script Date: 19-03-2024 01:47:42 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -520,3 +511,5 @@ BEGIN
 END
 GO
 "
+
+Invoke-Sqlcmd -ServerInstance $serverInstance -Database $database -Username $username -Password $password -query $query
