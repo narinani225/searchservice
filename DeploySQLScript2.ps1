@@ -1,3 +1,5 @@
+# Import the SQL Server module 
+Import-Module -Name SqlServer
 $serverInstance = "rg-workspace-sql-server.database.windows.net"
 $database = "rg-workspace-sql-db"
 $username = "Workspaceadmin"
