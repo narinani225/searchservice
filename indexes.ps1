@@ -1,8 +1,8 @@
+# Connect to Azure
 Connect-AzAccount
 
 # Set the correct Subscription ID
 Set-AzContext -SubscriptionId "1d012c12-eb7c-4bc4-aba7-d34e5c20bf00"
-
 
 $resourceGroupName = "EwsArmDeploy"
 $searchServiceName = "rgworkspacecognitivesearch"
@@ -16,7 +16,7 @@ $headers = @{
     'Accept' = 'application/json'
 }
 
-# Create index request body
+# Create index request body for azure-blob-blogs-index
 $indexBody = @{
     "name" = "azure-blob-blogs-index"
     "fields" = @(
@@ -33,6 +33,7 @@ $indexBody = @{
     )
 } | ConvertTo-Json
 
+# Create index request body for open-ai-index
 $openAiIndexBody = @{
     "name" = "open-ai-index"
     "fields" = @(
@@ -53,6 +54,8 @@ $openAiIndexBody = @{
 $urlIndex = "https://$($searchServiceName).search.windows.net/indexes/azure-blob-blogs-index?api-version=2023-11-01"
 $urlIndex1 = "https://$($searchServiceName).search.windows.net/indexes/open-ai-index?api-version=2023-11-01"
 
-# Create the index
+# Create the index for azure-blob-blogs-index
 Invoke-RestMethod -Uri $urlIndex -Headers $headers -Method Put -Body $indexBody | ConvertTo-Json
+
+# Create the index for open-ai-index
 Invoke-RestMethod -Uri $urlIndex1 -Headers $headers -Method Put -Body $openAiIndexBody | ConvertTo-Json
