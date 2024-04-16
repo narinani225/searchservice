@@ -7,7 +7,7 @@ $resourceGroupName = "EwsArmDeploy"
 $searchServiceName = "rgworkspacecognitivesearch"
 
 # Retrieve the admin API key from Azure Key Vault
-$adminKey = (Get-AzKeyVaultSecret -VaultName "ews-keyvault-test" -Name "search-Service-API-Key").SecretValueText
+$adminKey = (Get-AzKeyVaultSecret -VaultName "rg-workspace-keyvault" -Name "search-Service-API-Key").SecretValueText
 
 $headers = @{
     'api-key' = $adminKey
@@ -55,20 +55,3 @@ $urlIndex1 = "https://$($searchServiceName).search.windows.net/indexes/open-ai-i
 # Create the index
 Invoke-RestMethod -Uri $urlIndex -Headers $headers -Method Put -Body $indexBody | ConvertTo-Json
 Invoke-RestMethod -Uri $urlIndex1 -Headers $headers -Method Put -Body $openAiIndexBody | ConvertTo-Json
-
-# Create datasource request body
-$datasourceBody = @{
-    "name" = "azure-blob-datasource"
-    "type" = "azureblob"
-    "credentials" = @{
-        "connectionString" = "DefaultEndpointsProtocol=https;AccountName=rgworkspacesg;AccountKey=a5f+AK/Q974cBVEW7uRSR6zTLgo8HvkbvMLTtHZifL42M7TglsHLjN2dUhUR4q4F7cz8wzjmxK5r+AStKwmZAA==;EndpointSuffix=core.windows.net"
-    }
-    "container" = @{
-        "name" = "dev-container-blob"
-    }
-} | ConvertTo-Json
-
-$urlDatasource = "https://$($searchServiceName).search.windows.net/datasources/azure-blob-datasource?api-version=2023-11-01"
-
-# Create the datasource
-Invoke-RestMethod -Uri $urlDatasource -Headers $headers -Method Put -Body $datasourceBody | ConvertTo-Json
