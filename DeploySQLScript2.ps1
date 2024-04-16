@@ -4,7 +4,7 @@ Install-Module -Name SqlServer -Scope CurrentUser
 # Import the SQL Server module 
 Import-Module -Name SqlServer
 $serverInstance = "rg-workspace-sql-server.database.windows.net"
-$database = "rg-workspace-sql-db"
+$database = "test-db"
 $username = "Workspaceadmin"
 $password = "admin@2024#2103"
 $query ="/****** Object:  Table [dbo].[Applications]    Script Date: 19-03-2024 01:47:42 ******/
