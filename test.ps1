@@ -1,5 +1,11 @@
 param (
-    [string]$ApiUrl
+    [string]$ApiUrl,
+    [string]$StorageAccountName,
+    [string]$StorageAccountKey,
+    [string]$ResourceGroupName,
+    [string]$FileShareName,
+    [string]$LocalFilePath,
+    [string]$RemoteFileName
 )
 
 # Set the JSON object with the API URL
@@ -11,20 +17,10 @@ $jsonObject = @{
 $jsonString = $jsonObject | ConvertTo-Json
 
 # Write the JSON string to a file
-$jsonString | Out-File -FilePath "api-url.json"
+$jsonString | Out-File -FilePath $LocalFilePath
 
-# Replace these values with your own
-$storageAccountName = "rgworkspacesg"
-$resourceGroupName = "EwsArmDeploy"
-$fileShareName = "mount"
-$localFilePath = "api-url.json"
-$remoteFileName = "api-url.json"
- 
-# Get the storage account key
-$storageAccountKey = "a5f+AK/Q974cBVEW7uRSR6zTLgo8HvkbvMLTtHZifL42M7TglsHLjN2dUhUR4q4F7cz8wzjmxK5r+AStKwmZAA=="
- 
 # Create the storage context
-$storageContext = New-AzStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
- 
+$storageContext = New-AzStorageContext -StorageAccountName $StorageAccountName -StorageAccountKey $StorageAccountKey
+
 # Upload the file to the file share
-Set-AzStorageFileContent -Context $storageContext -ShareName $fileShareName -Source $localFilePath -Path $remoteFileName
+Set-AzStorageFileContent -Context $storageContext -ShareName $FileShareName -Source $LocalFilePath -Path $RemoteFileName
