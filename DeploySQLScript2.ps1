@@ -1,8 +1,9 @@
 
-Install-Module -Name SqlServer -Scope CurrentUser
+Install-Module -Name SqlServer -Scope CurrentUser -Force
 
 # Import the SQL Server module 
 Import-Module -Name SqlServer
+
 $serverInstance = "rg-workspace-sql-server.database.windows.net"
 $database = "test-db"
 $username = "Workspaceadmin"
