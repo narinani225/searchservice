@@ -1,6 +1,7 @@
 # Connect to Azure Account using a Microsoft identity
-Connect-AzAccount -UseDeviceAuthentication
+#Connect-AzAccount -UseDeviceAuthentication
 #Set-AzContext -SubscriptionId ""
+$null = Connect-AzAccount -Identity
 # Microsoft AD application
 $appName = "ARM_WorkspaceSearch"
 $keyVaultName = "rg-workspace-keyvault"  # Replace with your Key Vault name
