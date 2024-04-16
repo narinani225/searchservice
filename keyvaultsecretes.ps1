@@ -1,5 +1,5 @@
 # Connect to Azure Account using a Microsoft identity
-Connect-AzAccount
+Connect-AzAccount -UseDeviceAuthentication
 Set-AzContext -SubscriptionId "1d012c12-eb7c-4bc4-aba7-d34e5c20bf00"
 # Microsoft AD application
 $appName = "ARM_WorkspaceSearch"
