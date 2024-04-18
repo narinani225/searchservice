@@ -23,4 +23,4 @@ $jsonString | Out-File -FilePath appConfig.json
 $storageContext = New-AzStorageContext -StorageAccountName $StorageAccountName -StorageAccountKey $StorageAccountKey
 
 # Upload the file to the file share
-Set-AzStorageFileContent -Context $storageContext -ShareName $FileShareName -Source $LocalFilePath -Path appConfig.json
+Set-AzStorageFileContent -Context $storageContext -ShareName $FileShareName -Source appConfig.json -Path appConfig.json
