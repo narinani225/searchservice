@@ -2,7 +2,7 @@
 Connect-AzAccount
 
 # Set the correct Subscription ID
-Set-AzContext -SubscriptionId "1d012c12-eb7c-4bc4-aba7-d34e5c20bf00"
+Set-AzContext -SubscriptionId ""
 
 $resourceGroupName = "EwsArmDeploy"
 $searchServiceName = "rgworkspacecognitivesearch"
