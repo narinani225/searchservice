@@ -3,9 +3,8 @@ param (
     [string]$StorageAccountName,
     [string]$StorageAccountKey,
     [string]$ResourceGroupName,
-    [string]$FileShareName,
-    [string]$LocalFilePath,
-    [string]$RemoteFileName
+    [string]$FileShareName
+   
 )
 $ApiUrl="https://"+$ApiUrl+".azurewebsites.net/api"
 $ApiUrl
@@ -18,10 +17,10 @@ $jsonObject = @{
 $jsonString = $jsonObject | ConvertTo-Json
 
 # Write the JSON string to a file
-$jsonString | Out-File -FilePath $LocalFilePath
+$jsonString | Out-File -FilePath appConfig.json
 
 # Create the storage context
 $storageContext = New-AzStorageContext -StorageAccountName $StorageAccountName -StorageAccountKey $StorageAccountKey
 
 # Upload the file to the file share
-Set-AzStorageFileContent -Context $storageContext -ShareName $FileShareName -Source $LocalFilePath -Path $RemoteFileName
+Set-AzStorageFileContent -Context $storageContext -ShareName $FileShareName -Source $LocalFilePath -Path appConfig.json
