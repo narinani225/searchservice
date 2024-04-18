@@ -7,7 +7,8 @@ param (
     [string]$LocalFilePath,
     [string]$RemoteFileName
 )
-
+$ApiUrl="https://"+$ApiUrl+".azurewebsites.net/api"
+$ApiUrl
 # Set the JSON object with the API URL
 $jsonObject = @{
     "API_URL" = $ApiUrl
