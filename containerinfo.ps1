@@ -1,6 +1,6 @@
 # Connect to Azure
 Connect-AzAccount
-Set-AzContext -SubscriptionId "1d012c12-eb7c-4bc4-aba7-d34e5c20bf00"
+Set-AzContext -SubscriptionId ""
 
 $sourceResourceGroupName2 = "AZR_RG_NARESH_P"
 $sourceStorageAccountName2 = "pmoblobstorageaccount"
