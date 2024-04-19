@@ -31,5 +31,5 @@ Start-Sleep -Seconds 300
 
 
 
-$storagePath = New-AzWebAppAzureStoragePath -Name "mount" -AccountName $StorageAccountName -Type AzureFiles -ShareName $FileShareName -AccessKey $StorageAccountKey -MountPath "/usr/share/nginx/html/assets"
-Set-AzWebApp -ResourceGroupName $ResourceGroupName -Name $Appname -AzureStoragePath $storagePath -Verbose 
+#$storagePath = New-AzWebAppAzureStoragePath -Name "mount" -AccountName $StorageAccountName -Type AzureFiles -ShareName $FileShareName -AccessKey $StorageAccountKey -MountPath "/usr/share/nginx/html/assets"
+#Set-AzWebApp -ResourceGroupName $ResourceGroupName -Name $Appname -AzureStoragePath $storagePath -Verbose 
