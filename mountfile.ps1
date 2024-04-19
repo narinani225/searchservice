@@ -7,6 +7,7 @@ param (
    [string]$Appname
    
 )
+Select-AzureSubscription -SubscriptionName "R and D Labs" -Default
 $ApiUrl="https://"+$ApiUrl+".azurewebsites.net/api"
 $ApiUrl
 # Set the JSON object with the API URL
