@@ -3,8 +3,7 @@ param (
     [string]$StorageAccountName,
     [string]$StorageAccountKey,
     [string]$ResourceGroupName,
-    [string]$FileShareName,
-   [string]$Appname
+    [string]$FileShareName
    
 )
 
