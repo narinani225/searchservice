@@ -3,7 +3,8 @@ param (
     [string]$StorageAccountName,
     [string]$StorageAccountKey,
     [string]$ResourceGroupName,
-    [string]$FileShareName
+    [string]$FileShareName,
+   [string]$Appname
    
 )
 $ApiUrl="https://"+$ApiUrl+".azurewebsites.net/api"
@@ -24,3 +25,10 @@ $storageContext = New-AzStorageContext -StorageAccountName $StorageAccountName -
 
 # Upload the file to the file share
 Set-AzStorageFileContent -Context $storageContext -ShareName $FileShareName -Source appConfig.json -Path appConfig.json
+
+
+
+
+
+$storagePath = New-AzWebAppAzureStoragePath -Name "mount" -AccountName $StorageAccountName -Type AzureFiles -ShareName $FileShareName -AccessKey $StorageAccountKey -MountPath "/usr/share/nginx/html/assets"
+Set-AzWebApp -ResourceGroupName $ResourceGroupName -Name $Appname -AzureStoragePath $storagePath -Verbose 
