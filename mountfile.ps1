@@ -25,7 +25,7 @@ $storageContext = New-AzStorageContext -StorageAccountName $StorageAccountName -
 
 # Upload the file to the file share
 Set-AzStorageFileContent -Context $storageContext -ShareName $FileShareName -Source appConfig.json -Path appConfig.json
-
+Start-Sleep -Seconds 300
 
 
 
